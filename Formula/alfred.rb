@@ -5,8 +5,8 @@ class Alfred < Formula
   desc "Agent operations runtime for coding harnesses"
   homepage "https://alfred.alfredlabs.org"
   url "https://github.com/GOI17/alfred.git",
-      tag:      "v0.5.0",
-      revision: "ee73a36af68c28ebb305d8290c8254f86cf091fa"
+      tag:      "v0.6.0",
+      revision: "6f6a4da5964f1b0cc77c6b27813258269d7abfa9"
 
   depends_on "node"
 
@@ -17,22 +17,14 @@ class Alfred < Formula
 
     (bin/"alfred").write <<~SH
       #!/bin/sh
-      exec "#{formula_opt_bin("node")}/node" "#{libexec}/packages/memory-server/scripts/alfred.mjs" "$@"
-    SH
-
-    (bin/"alfred-install").write <<~SH
-      #!/bin/sh
-      if [ "$#" -eq 0 ]; then
-        ALFRED_INSTALL_FORCE_TUI=1 exec "#{libexec}/install.sh" --path="#{libexec}" --no-clone
-      fi
-      exec "#{libexec}/install.sh" "$@" --path="#{libexec}" --no-clone
+      ALFRED_DISTRIBUTION=homebrew exec "#{formula_opt_bin("node")}/node" "#{libexec}/packages/memory-server/scripts/alfred.mjs" "$@"
     SH
   end
 
   def caveats
     <<~EOS
       Alfred is installed preview-first. Run the guided setup with:
-        alfred-install
+        alfred setup
 
       The formula does not write live harness configuration during installation.
     EOS
@@ -40,7 +32,7 @@ class Alfred < Formula
 
   test do
     assert_equal "alfred #{version}", shell_output("#{bin}/alfred version").strip
-    output = shell_output("#{bin}/alfred-install --edition=coding --name=brew-test --harness=none")
+    output = shell_output("#{bin}/alfred setup --edition=coding --name=brew-test --harness=none")
     assert_match "ALFRED SUITE INSTALL PREVIEW", output
     assert_match "Provider calls: 0", output
   end
