@@ -7,7 +7,6 @@ class Alfred < Formula
   url "https://github.com/GOI17/alfred.git",
       tag:      "v0.5.0",
       revision: "ee73a36af68c28ebb305d8290c8254f86cf091fa"
-  version "0.5.0"
 
   depends_on "node"
 
