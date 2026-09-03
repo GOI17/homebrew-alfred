@@ -5,8 +5,8 @@ class Alfred < Formula
   desc "Agent operations runtime for coding harnesses"
   homepage "https://alfred.alfredlabs.org"
   url "https://github.com/GOI17/alfred.git",
-      tag:      "v0.7.0",
-      revision: "f8ec19e26d9ea26306275ddcc8e62f8f3393ca50"
+      tag:      "v0.7.1",
+      revision: "c22b5ebb963bd215a914b5245202a01f8b288fef"
 
   depends_on "node"
 
