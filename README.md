@@ -1,34 +1,13 @@
-# Alfred Homebrew tap
+# Alfred Homebrew distribution
 
-This private repository publishes the versioned Alfred CLI. The current tap is
-`GOI17/alfred`, which Homebrew maps to `GOI17/homebrew-alfred`.
+This tap is being prepared for installation by third parties without access to
+the private Alfred development repository. Public activation is pending approval
+of the runtime artifact and this repository's visibility. The commands below
+become available only after that activation.
 
-## Install on another computer
+## Install after public activation
 
-You need Git, GitHub CLI (`gh`), and Homebrew on that computer, plus a GitHub
-account with read access to **both** `GOI17/homebrew-alfred` (this tap) and
-`GOI17/alfred` (the private Git source used by the formula).
-
-Authenticate using HTTPS and configure Git's GitHub credential helper on that
-computer:
-
-```sh
-gh auth login --hostname github.com --git-protocol https
-gh auth setup-git --hostname github.com
-```
-
-Verify repository, formula, and Git access before installing:
-
-```sh
-gh api repos/GOI17/homebrew-alfred --jq .full_name
-gh api repos/GOI17/alfred --jq .full_name
-gh api repos/GOI17/homebrew-alfred/contents/Formula/alfred.rb --jq .path
-git ls-remote https://github.com/GOI17/homebrew-alfred.git HEAD
-git ls-remote https://github.com/GOI17/alfred.git HEAD
-```
-
-After all checks succeed, register the tap explicitly so tap access and source
-installation are separate steps:
+With Homebrew installed:
 
 ```sh
 brew tap GOI17/alfred
@@ -37,47 +16,55 @@ alfred version
 alfred setup
 ```
 
-Always use the fully qualified formula name. Plain `brew install alfred` can
-select the unrelated Alfred macOS application cask. `alfred setup` is guided
-and preview-first; the formula does not write live harness configuration.
+No GitHub login or collaborator access is required for the public distribution.
+Use the fully qualified formula name; unqualified `brew install alfred` can
+select the unrelated macOS application cask.
 
-## Troubleshooting
+The formula downloads a versioned runtime archive from this repository's public
+GitHub Release and verifies its SHA-256. It does not clone or download the private
+source repository. Homebrew installs Node as a declared dependency. Setup is
+guided and preview-first; applying harness configuration remains your decision.
 
-- A private repository may return `404` or `Repository not found` when the
-  account lacks access. Check the signed-in account and access to both repos;
-  a 404 alone does not establish that publication failed.
-- If API reads work but `git ls-remote` fails, check HTTPS Git authentication.
-  `gh auth setup-git --hostname github.com` configures Git, while API success
-  alone does not prove Git is using the same credentials.
-- If both repositories are accessible but `Formula/alfred.rb` is absent or
-  stale, compare it with the stable Alfred release/tag and inspect the publisher
-  job in Alfred's Release Please workflow. Do not create a new release merely
-  to diagnose an access error.
-- The former name `GOI17/homebrew-tap` still redirected for authenticated reads
-  on 2026-09-07. New installs should use the current name. Changing capitalization
-  does not repair authentication; existing old-name taps do not need to be
-  removed to diagnose access.
+## What the package contains
 
-The full [Alfred installation guide](https://alfred.alfredlabs.org/docs/install.html#homebrew-troubleshooting)
-contains release/publisher checks. Never paste access tokens into issue reports.
+The runtime archive distributes **readable JavaScript and shell code**, necessary
+HTML/UI, SQL/schema files, runtime agent/skill/policy instructions, and production
+dependencies with their license notices. It is not an opaque native binary and
+packaging does not hide the distributed code. The private development repository
+and its Git history remain separate.
 
-## Upgrade or uninstall
+Each release includes an exact content manifest and archive checksum. The
+packaging allowlist excludes development history, workflow configuration, tests,
+internal execution documents, operation traces, local configuration and secrets.
+The Node guided installer is included; optional native OpenTUI binaries and
+Transformers model downloads are not part of this runtime package.
 
-For installations using the current tap name:
+## Verify a published package
+
+The release asset and its manifest must be downloadable without authentication.
+If the tap is reachable but the runtime URL returns 404, this is a distribution
+publication problem for the maintainer to resolve. Do not request access to the
+private development repository as an installation workaround.
 
 ```sh
 brew update
+brew info GOI17/alfred/alfred
 brew upgrade GOI17/alfred/alfred
+```
+
+To remove the package:
+
+```sh
 brew uninstall GOI17/alfred/alfred
 ```
 
-## Maintainer context
+## Release controls
 
-The formula pins the private source by tag and full commit revision. Alfred's
-release workflow publishes it using the existing repository-scoped deploy key.
-Repository visibility and release publication remain separate maintainer decisions.
+Private preparation builds a curated artifact for review. Public publication is
+a separate manual operation tied to the approved archive checksum and target.
+The publisher verifies public anonymous asset download before activating the
+formula, and refuses to replace an existing version with different bytes.
 
-Tracked in [Alfred issue #204](https://github.com/GOI17/alfred/issues/204) and its
-[installation-access specification](https://github.com/GOI17/alfred/blob/issue-204-homebrew-tap-access/.ai/execution/homebrew-tap-access.md).
-See also [Homebrew tap naming](https://docs.brew.sh/Taps) and the
-[GitHub CLI credential helper](https://cli.github.com/manual/gh_auth_setup-git).
+Repository visibility changes, first public publication and release credentials
+are human-controlled operations; merging a preparation PR is not authorization
+to expose private source or publish a runtime archive.
