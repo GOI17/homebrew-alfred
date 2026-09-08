@@ -1,13 +1,8 @@
 # Alfred Homebrew distribution
 
-This tap is being prepared for installation by third parties without access to
-the private Alfred development repository. Public activation is pending approval
-of the runtime artifact and this repository's visibility. The commands below
-become available only after that activation.
+Public activation is pending explicit approval. The reviewed formula now points to a curated runtime release asset; that asset is not public yet. The source repository GOI17/alfred and its Git history remain private.
 
-## Install after public activation
-
-With Homebrew installed:
+After public activation, install without a GitHub account, token or source access:
 
 ```sh
 brew tap GOI17/alfred
@@ -16,55 +11,14 @@ alfred version
 alfred setup
 ```
 
-No GitHub login or collaborator access is required for the public distribution.
-Use the fully qualified formula name; unqualified `brew install alfred` can
-select the unrelated macOS application cask.
+Use the qualified formula name to avoid the unrelated macOS application cask. Homebrew supplies Node; setup is guided and preview-first. The runtime uses its packaged Node TUI without private source or OpenTUI downloads.
 
-The formula downloads a versioned runtime archive from this repository's public
-GitHub Release and verifies its SHA-256. It does not clone or download the private
-source repository. Homebrew installs Node as a declared dependency. Setup is
-guided and preview-first; applying harness configuration remains your decision.
+The reviewed v0.7.2 candidate contains 1,895 files (including its complete inventory), occupying 1,999,956 compressed bytes. It includes readable JavaScript, shell, HTML, SQL, runtime agent/skill/policy instructions and 109 production dependencies with license notices. It is not an opaque native binary. Git history, workflows, tests, internal execution records, local profiles and credentials are excluded.
 
-## What the package contains
+Runtime SHA256: `49bcb601b25190afc7a9b56dd2a78e3ceabf6004fdf7b718b6072681b8f2aed7`.
 
-The runtime archive distributes **readable JavaScript and shell code**, necessary
-HTML/UI, SQL/schema files, runtime agent/skill/policy instructions, and production
-dependencies with their license notices. It is not an opaque native binary and
-packaging does not hide the distributed code. The private development repository
-and its Git history remain separate.
+Proposed asset: `https://github.com/GOI17/homebrew-alfred/releases/download/v0.7.2/alfred-0.7.2-runtime.tar.gz`.
 
-Each release includes an exact content manifest and archive checksum. The
-packaging allowlist excludes development history, workflow configuration, tests,
-internal execution documents, operation traces, local configuration and secrets.
-The Node guided installer is included; optional native OpenTUI binaries and
-Transformers model downloads are not part of this runtime package.
+The archive was built twice with identical bytes from exact private source/builder revision 303ad82c4ba9fdc4641feb0f30e2aef3cd3313c7. This distribution includes packaging and fresh-machine fixes; it is not a repack of the old private v0.7.2 tag. Local verification covers anonymous HTTP retrieval, relocated CLI, guided setup previews, live HTTP server, SQLite and MCP CRUD/search. Real anonymous GitHub/Homebrew installation remains pending activation.
 
-## Verify a published package
-
-The release asset and its manifest must be downloadable without authentication.
-If the tap is reachable but the runtime URL returns 404, this is a distribution
-publication problem for the maintainer to resolve. Do not request access to the
-private development repository as an installation workaround.
-
-```sh
-brew update
-brew info GOI17/alfred/alfred
-brew upgrade GOI17/alfred/alfred
-```
-
-To remove the package:
-
-```sh
-brew uninstall GOI17/alfred/alfred
-```
-
-## Release controls
-
-Private preparation builds a curated artifact for review. Public publication is
-a separate manual operation tied to the approved archive checksum and target.
-The publisher verifies public anonymous asset download before activating the
-formula, and refuses to replace an existing version with different bytes.
-
-Repository visibility changes, first public publication and release credentials
-are human-controlled operations; merging a preparation PR is not authorization
-to expose private source or publish a runtime archive.
+PR validation checks the formula syntax and public release URL/hash contract without downloads. The manual public-install workflow may be invoked only after public activation has been specifically authorized. Maintainers retain the exact approved artifact/formula; rebuilding under a later commit requires another checksum review.

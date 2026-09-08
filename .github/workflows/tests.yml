@@ -1,60 +1,43 @@
-# brew tap-new uses this file to generate a PR test workflow for the new tap
-name: brew test-bot
-
+name: tests
 on:
-  push:
-    branches:
-      - main
   pull_request:
-
-permissions: {}
-
-defaults:
-  run:
-    shell: bash -xeuo pipefail {0}
-
+  workflow_dispatch:
+    inputs:
+      verify_public_install:
+        description: "Run anonymous download/install only after reviewed public activation"
+        required: true
+        default: false
+        type: boolean
+permissions:
+  contents: read
 jobs:
-  test-bot:
-    strategy:
-      matrix:
-        os: [ macos-26 ]
-        include:
-          - os: ubuntu-latest
-            container:
-              image: ghcr.io/homebrew/brew:main
-              options: --privileged
-    runs-on: ${{ matrix.os }}
-    container: ${{ fromJSON(toJSON(matrix.container)) }} # zizmor: ignore[unpinned-images]
-    permissions:
-      actions: read
-      checks: read
-      contents: read
-      pull-requests: read
+  formula-contract:
+    runs-on: macos-latest
     steps:
-      - name: Set up Homebrew
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@b35a29a0f83ee8b8ca07b219fc8db3d7bb88ab49 # 2026.08.10.2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Cache Homebrew Bundler RubyGems
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
-          key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
-          restore-keys: ${{ matrix.os }}-rubygems-
-
-      - run: brew test-bot --only-cleanup-before
-
-      - run: brew test-bot --only-setup
-
-      - run: brew test-bot --only-tap-syntax
-      - run: brew test-bot --only-formulae
-        if: github.event_name == 'pull_request'
-
-      - name: Upload bottles as artifact
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: bottles_${{ matrix.os }}
-          path: '*.bottle.*'
+      - uses: actions/checkout@v6
+      - run: ruby -c Formula/alfred.rb
+      - name: Validate reviewed release asset contract without downloading
+        run: |
+          ruby -e '
+            text = File.read("Formula/alfred.rb")
+            abort "Expected public runtime release asset" unless text.match?(%r{https://github.com/GOI17/homebrew-alfred/releases/download/v[0-9]+\.[0-9]+\.[0-9]+/alfred-[0-9]+\.[0-9]+\.[0-9]+-runtime\.tar\.gz})
+            abort "Expected SHA256" unless text.match?(/sha256 "[a-f0-9]{64}"/)
+            abort "Private source is forbidden" if text.include?("https://github.com/GOI17/alfred")
+          '
+  public-install:
+    if: github.event_name == 'workflow_dispatch' && inputs.verify_public_install
+    needs: formula-contract
+    runs-on: macos-latest
+    steps:
+      - name: Install as an anonymous Homebrew user
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+          GIT_CONFIG_NOSYSTEM: "1"
+          GIT_CONFIG_GLOBAL: /dev/null
+          GIT_TERMINAL_PROMPT: "0"
+        run: |
+          brew tap GOI17/alfred
+          brew install GOI17/alfred/alfred
+          alfred version
+          alfred setup --edition=coding --name=public-test --harness=none
+          brew test GOI17/alfred/alfred
