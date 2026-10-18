@@ -1,10 +1,7 @@
 # Alfred Homebrew tap
 
-> Alfred [v0.7.3](https://github.com/GOI17/alfred/releases/tag/v0.7.3) is available
-> through this public tap. Its runtime assets were downloaded without credentials
-> and verified against `SHA256SUMS`; the canonical tap formula matches the release
-> formula byte-for-byte. A real `brew install` has not yet been executed as part
-> of this release verification.
+> This public tap distributes Alfred's [latest stable release](https://github.com/GOI17/alfred/releases/latest).
+> Homebrew installs the versioned runtime using the SHA-256 pinned in the formula.
 
 [Alfred](https://github.com/GOI17/alfred) handles the operational burden so humans
 focus on decisions. This public dedicated tap distributes its versioned runtime through Homebrew.
@@ -23,10 +20,12 @@ Homebrew provides Node and downloads the exact release runtime with its pinned
 SHA-256. Production dependencies are bundled; users do not need a source checkout
 or an npm install.
 
-Install the runtime once, then configure each project deliberately. Setup shows
-previews before changes and uses the packaged Node TUI without cloning `main` or
-fetching a different installer. Installing this formula does not activate a live
-harness or authorize global configuration changes.
+Install the runtime once, then configure each project deliberately. Interactive
+`alfred setup` uses the bundled Go TUI built with Bubble Tea and Lip Gloss.
+Setup shows a preview before changes; confirm with `y`, or return with `n` or Esc.
+It does not clone `main`, fetch a different installer, or download Go at runtime.
+Installing this formula does not activate a live harness or authorize global
+configuration changes.
 
 For managed text-loading requests, initialize each project separately:
 
@@ -43,9 +42,9 @@ for the current capability and host-integration limits.
 
 ## Verify releases
 
-The [v0.7.3 release](https://github.com/GOI17/alfred/releases/tag/v0.7.3) contains:
+The [latest stable release](https://github.com/GOI17/alfred/releases/latest) contains:
 
-- `alfred-0.7.3-runtime.tar.gz`
+- `alfred-<version>-runtime.tar.gz`
 - `runtime-manifest.json`
 - `SHA256SUMS`
 - `alfred.rb`
@@ -66,5 +65,4 @@ recovery procedure, not the normal release process.
 
 See the [packaging guide](https://github.com/GOI17/alfred/blob/main/packaging/homebrew/README.md)
 for verification and recovery. Never overwrite existing release assets with
-different bytes. The v0.7.3 runtime release does not retroactively change
-`v0.7.2`; its missing runtime assets must not be filled with newer code.
+different bytes. Do not backfill older releases with assets built from newer source.
