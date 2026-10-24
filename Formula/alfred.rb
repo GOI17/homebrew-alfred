@@ -4,8 +4,8 @@
 class Alfred < Formula
   desc "Agent operations runtime for coding harnesses"
   homepage "https://alfred.alfredlabs.org"
-  url "https://github.com/GOI17/alfred/releases/download/v1.0.1/alfred-1.0.1-runtime.tar.gz"
-  sha256 "cf74f045c8fc0557266fb7e53facf18e4b6dff6d00dc551a03b6aa20d5939357"
+  url "https://github.com/GOI17/alfred/releases/download/v1.1.0/alfred-1.1.0-runtime.tar.gz"
+  sha256 "63fa13d309f5157a20d369c692a0e3b32e21dc8ce6cca500734fffb6d61c61cd"
 
   depends_on "node"
 
