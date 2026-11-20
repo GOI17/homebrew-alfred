@@ -4,8 +4,8 @@
 class Alfred < Formula
   desc "Workspace, memory and agent harness runtime"
   homepage "https://alfred.alfredlabs.org"
-  url "https://github.com/GOI17/alfred/releases/download/v1.7.1/alfred-1.7.1-runtime.tar.gz"
-  sha256 "cccb4ce2d6f564d02d62c0ce580b878243b34adfee7761f82536fe70797857ff"
+  url "https://github.com/GOI17/alfred/releases/download/v1.8.0/alfred-1.8.0-runtime.tar.gz"
+  sha256 "439ea76911a77d44a13929caf0b9823bd019335a8ef382310b3fefb528bcb8cf"
 
   depends_on "node"
 
