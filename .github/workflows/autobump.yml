@@ -26,11 +26,11 @@ jobs:
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@b35a29a0f83ee8b8ca07b219fc8db3d7bb88ab49 # 2026.08.10.2
+        uses: Homebrew/actions/setup-homebrew@61b401267256bb9c047d6d1481b176d5772a0ba7 # 2026.11.23.1
 
       - name: Set up git
         id: git_setup
-        uses: Homebrew/actions/git-user-config@b35a29a0f83ee8b8ca07b219fc8db3d7bb88ab49 # 2026.08.10.2
+        uses: Homebrew/actions/git-user-config@61b401267256bb9c047d6d1481b176d5772a0ba7 # 2026.11.23.1
 
       - name: Bump formulae
         env:
